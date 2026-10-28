@@ -2,8 +2,6 @@ module github.com/moshequantum/velo
 
 go 1.27.1
 
-replace github.com/atotto/clipboard => ./internal/clipboard
-
 require (
 	github.com/charmbracelet/bubbles v0.20.0
 	github.com/charmbracelet/bubbletea v1.3.4
