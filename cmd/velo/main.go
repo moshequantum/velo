@@ -1,9 +1,11 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
+	"github.com/moshequantum/velo/internal/scaffold"
 	"github.com/moshequantum/velo/internal/tui"
 	"github.com/moshequantum/velo/internal/wizard"
 	"github.com/moshequantum/velo/internal/wizard/steps"
@@ -22,7 +24,7 @@ func main() {
 
 	switch cmd {
 	case "init", "create":
-		runWizard()
+		handleInit(os.Args[2:])
 
 	case "version", "--version", "-v":
 		fmt.Printf("velo CLI v%s — Edge & Headless Framework\n", Version)
@@ -42,6 +44,63 @@ func main() {
 		printHelp()
 		os.Exit(1)
 	}
+}
+
+func handleInit(args []string) {
+	if len(args) == 0 {
+		runWizard()
+		return
+	}
+
+	fs := flag.NewFlagSet("init", flag.ExitOnError)
+	name := fs.String("name", "", "Nombre del proyecto")
+	slug := fs.String("slug", "", "Slug identificador (carpeta)")
+	frontend := fs.String("frontend", "astro", "Frontend framework (astro, react-vite)")
+	target := fs.String("target", ".", "Directorio destino")
+	insforge := fs.String("insforge", "", "URL de proyecto InsForge")
+	bot := fs.String("bot", "", "Handle del bot de Telegram")
+	owner := fs.String("owner", "", "ID numérico de Telegram del dueño")
+
+	if err := fs.Parse(args); err != nil {
+		fmt.Printf("Error procesando argumentos: %v\n", err)
+		os.Exit(1)
+	}
+
+	if *name == "" {
+		runWizard()
+		return
+	}
+
+	finalSlug := *slug
+	if finalSlug == "" {
+		finalSlug = *name
+	}
+
+	state := &wizard.State{
+		ProjectName:       *name,
+		ProjectSlug:       finalSlug,
+		Frontend:          *frontend,
+		Runtime:           "cloudflare-pages",
+		BaaS:              "insforge",
+		InsForgeProjectID: *insforge,
+		Cockpit:           "telegram",
+		TelegramBotHandle: *bot,
+		TelegramOwnerID:   *owner,
+		TargetDir:         *target,
+	}
+
+	fmt.Printf("⚡ Generando arnés Velo para '%s' en %s/%s...\n", state.ProjectName, state.TargetDir, state.ProjectSlug)
+	if err := scaffold.Generate(state); err != nil {
+		fmt.Printf("❌ Error al generar: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("🚀 ¡Arnés Velo generado exitosamente!")
+	fmt.Printf("  • Directorio: %s/%s\n", state.TargetDir, state.ProjectSlug)
+	fmt.Printf("  • Stack:      %s + Cloudflare Pages + InsForge\n", state.Frontend)
+	fmt.Printf("  • Cockpit:    Telegram HITL (/api/telegram)\n\n")
+	fmt.Println("Para arrancar:")
+	fmt.Printf("  cd %s/%s && pnpm install && pnpm dev\n", state.TargetDir, state.ProjectSlug)
 }
 
 func printHelp() {
