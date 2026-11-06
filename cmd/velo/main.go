@@ -18,6 +18,7 @@ import (
 const Version = "0.2.0"
 
 var (
+	validLanguages = map[string]bool{"en": true, "es": true}
 	validFrontends = map[string]bool{"astro": true, "next": true, "react-vite": true}
 	validRuntimes  = map[string]bool{"cloudflare-pages": true, "cloudflare-workers": true}
 	validData      = map[string]bool{"surrealdb": true, "insforge": true, "none": true}
@@ -84,6 +85,7 @@ func handleInit(args []string) int {
 	}
 
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
+	lang := fs.String("lang", "en", "Idioma / Language (en, es)")
 	name := fs.String("name", "", "Nombre del proyecto")
 	slug := fs.String("slug", "", "Slug identificador (carpeta)")
 	frontend := fs.String("frontend", "astro", "Frontend framework (astro, next, react-vite)")
@@ -110,6 +112,10 @@ func handleInit(args []string) int {
 	}
 
 	// Validate enums
+	if !validLanguages[*lang] {
+		fmt.Fprintf(os.Stderr, "Error: valor inválido para --lang: %q (válidos: en, es)\n", *lang)
+		return 2
+	}
 	if !validFrontends[*frontend] {
 		fmt.Fprintf(os.Stderr, "Error: valor inválido para --frontend: %q (válidos: astro, next, react-vite)\n", *frontend)
 		return 2
@@ -134,6 +140,7 @@ func handleInit(args []string) int {
 	finalSlug = wizard.Slugify(finalSlug)
 
 	state := &wizard.State{
+		Language:          *lang,
 		ProjectName:       *name,
 		ProjectSlug:       finalSlug,
 		Frontend:          *frontend,
@@ -148,7 +155,11 @@ func handleInit(args []string) int {
 	}
 
 	if !*dryRun {
-		fmt.Printf("⚡ Generando arnés Velo para '%s' en %s/%s...\n", state.ProjectName, state.TargetDir, state.ProjectSlug)
+		if state.IsSpanish() {
+			fmt.Printf("⚡ Generando arnés Velo para '%s' en %s/%s...\n", state.ProjectName, state.TargetDir, state.ProjectSlug)
+		} else {
+			fmt.Printf("⚡ Generating Velo harness for '%s' in %s/%s...\n", state.ProjectName, state.TargetDir, state.ProjectSlug)
+		}
 	}
 
 	if err := scaffold.Generate(state); err != nil {
@@ -160,14 +171,26 @@ func handleInit(args []string) int {
 		return 0
 	}
 
-	fmt.Println("🚀 ¡Arnés Velo generado exitosamente!")
-	fmt.Printf("  • Directorio: %s/%s\n", state.TargetDir, state.ProjectSlug)
-	fmt.Printf("  • Stack:      %s + %s + %s\n", state.Frontend, state.Runtime, state.DataProvider)
-	if state.Cockpit != "none" {
-		fmt.Printf("  • Cockpit:    Telegram HITL (/api/telegram)\n")
+	if state.IsSpanish() {
+		fmt.Println("🚀 ¡Arnés Velo generado exitosamente!")
+		fmt.Printf("  • Directorio: %s/%s\n", state.TargetDir, state.ProjectSlug)
+		fmt.Printf("  • Stack:      %s + %s + %s\n", state.Frontend, state.Runtime, state.DataProvider)
+		if state.Cockpit != "none" {
+			fmt.Printf("  • Cockpit:    Telegram HITL (/api/telegram)\n")
+		}
+		fmt.Println("\nPara arrancar:")
+		fmt.Printf("  cd %s/%s && pnpm install && pnpm dev\n", state.TargetDir, state.ProjectSlug)
+	} else {
+		fmt.Println("🚀 Velo harness generated successfully!")
+		fmt.Printf("  • Directory:  %s/%s\n", state.TargetDir, state.ProjectSlug)
+		fmt.Printf("  • Stack:      %s + %s + %s\n", state.Frontend, state.Runtime, state.DataProvider)
+		if state.Cockpit != "none" {
+			fmt.Printf("  • Cockpit:    Telegram HITL (/api/telegram)\n")
+		}
+		fmt.Println("\nTo launch:")
+		fmt.Printf("  cd %s/%s && pnpm install && pnpm dev\n", state.TargetDir, state.ProjectSlug)
 	}
-	fmt.Println("\nPara arrancar:")
-	fmt.Printf("  cd %s/%s && pnpm install && pnpm dev\n", state.TargetDir, state.ProjectSlug)
+
 	return 0
 }
 
@@ -253,6 +276,7 @@ Comandos:
   help                     Muestra esta ayuda
 
 Flags para 'velo init':
+  --lang <str>             Idioma / Language: en (default), es
   --name <str>             Nombre del proyecto (requerido en headless)
   --slug <str>             Slug identificador de la carpeta (auto-sanitizado)
   --frontend <str>         Frontend: astro (default), next, react-vite

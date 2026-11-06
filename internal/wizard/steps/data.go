@@ -17,25 +17,35 @@ type DataStep struct {
 	isInputURL bool
 }
 
-var dataChoices = []struct {
-	Key         string
-	Title       string
-	Description string
-}{
+type dataChoice struct {
+	Key     string
+	TitleEn string
+	TitleEs string
+	DescEn  string
+	DescEs  string
+}
+
+var dataChoices = []dataChoice{
 	{
-		Key:         "surrealdb",
-		Title:       "SurrealDB (Default nuevo)",
-		Description: "Multi-modelo, HTTP engine ideal para Workers sin estado.",
+		Key:     "surrealdb",
+		TitleEn: "SurrealDB (New default)",
+		TitleEs: "SurrealDB (Default nuevo)",
+		DescEn:  "Multi-model, HTTP engine ideal for stateless Workers.",
+		DescEs:  "Multi-modelo, HTTP engine ideal para Workers sin estado.",
 	},
 	{
-		Key:         "insforge",
-		Title:       "InsForge (Legacy)",
-		Description: "BaaS con PostgreSQL, Storage y Auth.",
+		Key:     "insforge",
+		TitleEn: "InsForge (Legacy)",
+		TitleEs: "InsForge (Legacy)",
+		DescEn:  "BaaS with PostgreSQL, Storage, and Auth.",
+		DescEs:  "BaaS con PostgreSQL, Storage y Auth.",
 	},
 	{
-		Key:         "none",
-		Title:       "Ninguno / Sin Base de Datos",
-		Description: "Proyecto estático o edge puro sin persistencia.",
+		Key:     "none",
+		TitleEn: "None / No Database",
+		TitleEs: "Ninguno / Sin Base de Datos",
+		DescEn:  "Static project or pure edge without persistence.",
+		DescEs:  "Proyecto estático o edge puro sin persistencia.",
 	},
 }
 
@@ -49,7 +59,11 @@ func NewDataStep(state *wizard.State) *DataStep {
 	}
 
 	ti := textinput.New()
-	ti.Placeholder = "URL pública del endpoint (opcional, ej. http://127.0.0.1:8000)"
+	if state.IsSpanish() {
+		ti.Placeholder = "URL pública del endpoint (opcional, ej. http://127.0.0.1:8000)"
+	} else {
+		ti.Placeholder = "Public endpoint URL (optional, e.g. http://127.0.0.1:8000)"
+	}
 	ti.Width = 50
 	if state.DataURL != "" {
 		ti.SetValue(state.DataURL)
@@ -118,8 +132,28 @@ func (s *DataStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 }
 
 func (s *DataStep) View() string {
-	title := tui.StyleTitle.Render("3. Capa de Datos & Persistencia")
-	desc := tui.StyleSubtitle.Render("Selecciona el proveedor de datos para tu backend:")
+	isEs := s.state.IsSpanish()
+
+	var title, desc, urlPrompt, helpText string
+	if isEs {
+		title = tui.StyleTitle.Render("3. Capa de Datos & Persistencia")
+		desc = tui.StyleSubtitle.Render("Selecciona el proveedor de datos para tu backend:")
+		urlPrompt = "URL del endpoint (opcional, configurable luego en .env/.dev.vars):"
+		if s.isInputURL {
+			helpText = "[ Enter ] Confirmar   [ Esc ] Cambiar proveedor"
+		} else {
+			helpText = "[ ↑/↓ ] Navegar   [ Enter ] Seleccionar   [ Esc ] Volver"
+		}
+	} else {
+		title = tui.StyleTitle.Render("3. Data Layer & Persistence")
+		desc = tui.StyleSubtitle.Render("Select the data provider for your backend:")
+		urlPrompt = "Endpoint URL (optional, configurable later in .env/.dev.vars):"
+		if s.isInputURL {
+			helpText = "[ Enter ] Confirm   [ Esc ] Change provider"
+		} else {
+			helpText = "[ ↑/↓ ] Navigate   [ Enter ] Select   [ Esc ] Back"
+		}
+	}
 
 	var options string
 	for i, choice := range dataChoices {
@@ -130,11 +164,18 @@ func (s *DataStep) View() string {
 			cursorMarker = "●"
 		}
 
+		choiceTitle := choice.TitleEn
+		choiceDesc := choice.DescEn
+		if isEs {
+			choiceTitle = choice.TitleEs
+			choiceDesc = choice.DescEs
+		}
+
 		line := fmt.Sprintf("%s%s %s\n    %s\n",
 			prefix,
 			cursorMarker,
-			choice.Title,
-			tui.StyleSubtitle.Render(choice.Description),
+			choiceTitle,
+			tui.StyleSubtitle.Render(choiceDesc),
 		)
 
 		if s.choiceIdx == i {
@@ -147,16 +188,12 @@ func (s *DataStep) View() string {
 	var urlSection string
 	if s.isInputURL {
 		urlSection = fmt.Sprintf("\n%s\n%s\n",
-			tui.StyleSubtitle.Render("URL del endpoint (opcional, configurable luego en .env/.dev.vars):"),
+			tui.StyleSubtitle.Render(urlPrompt),
 			s.urlInput.View(),
 		)
 	}
 
-	help := tui.StyleSubtitle.Render("[ ↑/↓ ] Navegar   [ Enter ] Seleccionar   [ Esc ] Volver")
-	if s.isInputURL {
-		help = tui.StyleSubtitle.Render("[ Enter ] Confirmar   [ Esc ] Cambiar proveedor")
-	}
-
+	help := tui.StyleSubtitle.Render(helpText)
 	content := fmt.Sprintf("%s\n%s\n\n%s%s\n%s", title, desc, options, urlSection, help)
 	return tui.StyleBox.Render(content)
 }

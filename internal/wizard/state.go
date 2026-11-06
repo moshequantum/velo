@@ -7,6 +7,7 @@ import (
 
 // State holds the accumulated project configuration across the wizard steps and CLI flags (Contract C2).
 type State struct {
+	Language          string // "en" (default) | "es"
 	ProjectName       string
 	ProjectSlug       string
 	Frontend          string // "astro" | "next" | "react-vite"
@@ -23,8 +24,9 @@ type State struct {
 // NewDefaultState returns state initialized with Velo recommended defaults.
 func NewDefaultState() *State {
 	return &State{
-		ProjectName:  "mi-app-velo",
-		ProjectSlug:  "mi-app-velo",
+		Language:     "en",
+		ProjectName:  "my-velo-app",
+		ProjectSlug:  "my-velo-app",
 		Frontend:     "astro",
 		Runtime:      "cloudflare-pages",
 		DataProvider: "surrealdb",
@@ -33,6 +35,11 @@ func NewDefaultState() *State {
 		TargetDir:    ".",
 		DryRun:       false,
 	}
+}
+
+// IsSpanish returns true if the chosen language is Spanish.
+func (s *State) IsSpanish() bool {
+	return s.Language == "es"
 }
 
 // Slugify converts an arbitrary project name into a safe, canonical directory slug.

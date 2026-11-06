@@ -36,34 +36,65 @@ func (s *ReviewStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 }
 
 func (s *ReviewStep) View() string {
-	title := tui.StyleTitle.Render("5. Revisión del Blueprint Velo")
-	desc := tui.StyleSubtitle.Render("Verifica la configuración antes de generar el arnés:")
+	isEs := s.state.IsSpanish()
 
 	bot := s.state.TelegramBotHandle
 	if bot == "" {
-		bot = "(Sin bot)"
+		if isEs {
+			bot = "(Sin bot)"
+		} else {
+			bot = "(No bot)"
+		}
 	}
+
 	dataDesc := s.state.DataProvider
 	if s.state.DataURL != "" {
 		dataDesc += fmt.Sprintf(" (%s)", s.state.DataURL)
 	}
 
-	summary := fmt.Sprintf(`  • Proyecto:     %s (%s)
+	var title, desc, helpText, summary string
+
+	if isEs {
+		title = tui.StyleTitle.Render("5. Revisión del Blueprint Velo")
+		desc = tui.StyleSubtitle.Render("Verifica la configuración antes de generar el arnés:")
+		summary = fmt.Sprintf(`  • Proyecto:     %s (%s)
+  • Idioma:       %s
   • Frontend:     %s
   • Runtime:      %s
   • Datos:        %s
   • Cockpit:      Telegram HITL %s
-  • Modo:         Free-tier first`,
-		tui.StyleSelected.Render(s.state.ProjectName),
-		s.state.ProjectSlug,
-		tui.StyleSelected.Render(s.state.Frontend),
-		tui.StyleSelected.Render(s.state.Runtime),
-		tui.StyleSelected.Render(dataDesc),
-		tui.StyleSelected.Render(bot),
-	)
+  • Modo:         Free-tier first ($0)`,
+			tui.StyleSelected.Render(s.state.ProjectName),
+			s.state.ProjectSlug,
+			tui.StyleSelected.Render("Español"),
+			tui.StyleSelected.Render(s.state.Frontend),
+			tui.StyleSelected.Render(s.state.Runtime),
+			tui.StyleSelected.Render(dataDesc),
+			tui.StyleSelected.Render(bot),
+		)
+		helpText = "\n[ Enter ] Generar Proyecto   [ Esc ] Modificar   [ q ] Cancelar"
+	} else {
+		title = tui.StyleTitle.Render("5. Velo Blueprint Review")
+		desc = tui.StyleSubtitle.Render("Verify configuration before generating the harness:")
+		summary = fmt.Sprintf(`  • Project:      %s (%s)
+  • Language:     %s
+  • Frontend:     %s
+  • Runtime:      %s
+  • Data:         %s
+  • Cockpit:      Telegram HITL %s
+  • Mode:         Free-tier first ($0)`,
+			tui.StyleSelected.Render(s.state.ProjectName),
+			s.state.ProjectSlug,
+			tui.StyleSelected.Render("English"),
+			tui.StyleSelected.Render(s.state.Frontend),
+			tui.StyleSelected.Render(s.state.Runtime),
+			tui.StyleSelected.Render(dataDesc),
+			tui.StyleSelected.Render(bot),
+		)
+		helpText = "\n[ Enter ] Generate Project   [ Esc ] Modify   [ q ] Cancel"
+	}
 
-	help := tui.StyleSubtitle.Render("\n[ Enter ] Generar Proyecto   [ Esc ] Modificar   [ q ] Cancelar")
-
+	help := tui.StyleSubtitle.Render(helpText)
 	content := fmt.Sprintf("%s\n%s\n\n%s\n\n%s", title, desc, summary, help)
 	return tui.StyleBox.Render(content)
 }

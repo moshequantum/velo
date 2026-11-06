@@ -17,7 +17,11 @@ type NamingStep struct {
 
 func NewNamingStep(state *wizard.State) *NamingStep {
 	ti := textinput.New()
-	ti.Placeholder = "mi-proyecto-edge"
+	if state.IsSpanish() {
+		ti.Placeholder = "mi-proyecto-edge"
+	} else {
+		ti.Placeholder = "my-edge-project"
+	}
 	ti.Focus()
 	ti.CharLimit = 50
 	ti.Width = 35
@@ -35,6 +39,13 @@ func (s *NamingStep) Init() tea.Cmd {
 	return textinput.Blink
 }
 
+func (s *NamingStep) defaultName() string {
+	if s.state.IsSpanish() {
+		return "mi-proyecto-edge"
+	}
+	return "my-edge-project"
+}
+
 func (s *NamingStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 	var cmd tea.Cmd
 
@@ -44,7 +55,7 @@ func (s *NamingStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 		case "enter":
 			val := strings.TrimSpace(s.textInput.Value())
 			if val == "" {
-				val = "mi-proyecto-edge"
+				val = s.defaultName()
 			}
 			s.state.ProjectName = val
 			s.state.ProjectSlug = wizard.Slugify(val)
@@ -61,20 +72,36 @@ func (s *NamingStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 }
 
 func (s *NamingStep) View() string {
-	title := tui.StyleTitle.Render("1. Nombre del Proyecto")
-	desc := tui.StyleSubtitle.Render("¿Cómo se llamará el proyecto o cliente?")
+	isEs := s.state.IsSpanish()
+
+	var title, desc, slugLabel, dirLabel, helpText string
+	if isEs {
+		title = tui.StyleTitle.Render("1. Nombre del Proyecto")
+		desc = tui.StyleSubtitle.Render("¿Cómo se llamará el proyecto o cliente?")
+		slugLabel = "Slug canónico"
+		dirLabel = "Directorio"
+		helpText = "[ Enter ] Continuar   [ Esc ] Volver"
+	} else {
+		title = tui.StyleTitle.Render("1. Project Name")
+		desc = tui.StyleSubtitle.Render("What will the project or client be named?")
+		slugLabel = "Canonical slug"
+		dirLabel = "Directory"
+		helpText = "[ Enter ] Continue   [ Esc ] Back"
+	}
 
 	slugPreview := wizard.Slugify(s.textInput.Value())
 	if slugPreview == "" {
-		slugPreview = "mi-proyecto-edge"
+		slugPreview = wizard.Slugify(s.defaultName())
 	}
 
-	preview := fmt.Sprintf("\nSlug canónico: %s\nDirectorio:     ./%s",
+	preview := fmt.Sprintf("\n%s: %s\n%s:     ./%s",
+		slugLabel,
 		tui.StyleSelected.Render(slugPreview),
+		dirLabel,
 		tui.StyleSelected.Render(slugPreview),
 	)
 
-	help := tui.StyleSubtitle.Render("\n[ Enter ] Continuar   [ Esc ] Volver")
+	help := tui.StyleSubtitle.Render("\n" + helpText)
 
 	content := fmt.Sprintf("%s\n%s\n\n%s\n%s\n%s", title, desc, s.textInput.View(), preview, help)
 	return tui.StyleBox.Render(content)

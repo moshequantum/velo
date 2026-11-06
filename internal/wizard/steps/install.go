@@ -64,36 +64,79 @@ func (s *InstallStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 }
 
 func (s *InstallStep) View() string {
+	isEs := s.state.IsSpanish()
+
 	if !s.done {
-		title := tui.StyleTitle.Render(fmt.Sprintf("%s Generando arnés Velo para '%s'...", s.spinner.View(), s.state.ProjectName))
+		var genMsg string
+		if isEs {
+			genMsg = fmt.Sprintf("%s Generando arnés Velo para '%s'...", s.spinner.View(), s.state.ProjectName)
+		} else {
+			genMsg = fmt.Sprintf("%s Generating Velo harness for '%s'...", s.spinner.View(), s.state.ProjectName)
+		}
+		title := tui.StyleTitle.Render(genMsg)
 		return tui.StyleBox.Render(title)
 	}
 
 	if s.err != nil {
-		title := tui.StyleTitle.Render("❌ Error generando el proyecto")
-		errMsg := fmt.Sprintf("Detalle del error:\n%v\n\nPresiona [ Enter ] para salir.", s.err)
-		return tui.StyleBox.Render(fmt.Sprintf("%s\n\n%s", title, errMsg))
+		var errTitle, errFooter string
+		if isEs {
+			errTitle = tui.StyleTitle.Render("❌ Error generando el proyecto")
+			errFooter = "Presiona [ Enter ] para salir."
+		} else {
+			errTitle = tui.StyleTitle.Render("❌ Error generating project")
+			errFooter = "Press [ Enter ] to exit."
+		}
+		errMsg := fmt.Sprintf("Error detail / Detalle:\n%v\n\n%s", s.err, errFooter)
+		return tui.StyleBox.Render(fmt.Sprintf("%s\n\n%s", errTitle, errMsg))
 	}
 
-	title := tui.StyleSuccess.Render("🚀 ¡Arnés Velo Generado con Éxito!")
 	dir := fmt.Sprintf("./%s", s.state.ProjectSlug)
 
-	instructions := fmt.Sprintf(`El proyecto fue aprovisionado en: %s
+	// Determine cockpit endpoint path
+	cockpitFile := fmt.Sprintf("%s/src/pages/api/telegram.ts", dir)
+	if s.state.Frontend == "next" {
+		cockpitFile = fmt.Sprintf("%s/src/app/api/telegram/route.ts", dir)
+	} else if s.state.Frontend == "react-vite" {
+		cockpitFile = fmt.Sprintf("%s/functions/api/telegram.ts", dir)
+	}
+
+	var title, instructions, footer string
+	if isEs {
+		title = tui.StyleSuccess.Render("🚀 ¡Arnés Velo Generado con Éxito!")
+		instructions = fmt.Sprintf(`El proyecto fue aprovisionado en: %s
 
 Siguientes pasos para despegar:
   1. cd %s
   2. pnpm install
-  3. pnpm dev              (Abre en http://localhost:4321)
-  4. wrangler pages deploy (Despliega directo a Cloudflare Pages $0)
+  3. pnpm dev              (Abre tu servidor local)
+  4. wrangler pages deploy (Despliega directo a Cloudflare $0)
 
 Cockpit Telegram configurado en:
-  → %s/src/pages/api/telegram.ts`,
-		tui.StyleSelected.Render(dir),
-		s.state.ProjectSlug,
-		dir,
-	)
+  → %s`,
+			tui.StyleSelected.Render(dir),
+			s.state.ProjectSlug,
+			cockpitFile,
+		)
+		footer = tui.StyleSubtitle.Render("\nPresiona [ Enter ] para finalizar...")
+	} else {
+		title = tui.StyleSuccess.Render("🚀 Velo Harness Generated Successfully!")
+		instructions = fmt.Sprintf(`The project was provisioned at: %s
 
-	footer := tui.StyleSubtitle.Render("\nPresiona [ Enter ] para finalizar...")
+Next steps to launch:
+  1. cd %s
+  2. pnpm install
+  3. pnpm dev              (Opens your local development server)
+  4. wrangler pages deploy (Deploy directly to Cloudflare $0)
+
+Telegram Cockpit configured at:
+  → %s`,
+			tui.StyleSelected.Render(dir),
+			s.state.ProjectSlug,
+			cockpitFile,
+		)
+		footer = tui.StyleSubtitle.Render("\nPress [ Enter ] to exit...")
+	}
+
 	content := fmt.Sprintf("%s\n\n%s\n%s", title, instructions, footer)
 	return tui.StyleBox.Render(content)
 }

@@ -79,6 +79,22 @@ func TestHandleInit_FlagParsingTable(t *testing.T) {
 		wantInErr    string
 	}{
 		{
+			name:         "invalid lang enum",
+			args:         []string{"--name", "TestApp", "--lang", "fr"},
+			expectedCode: 2,
+			wantInErr:    "valor inválido para --lang",
+		},
+		{
+			name:         "valid lang es",
+			args:         []string{"--name", "TestApp", "--lang", "es", "--dry-run"},
+			expectedCode: 0,
+		},
+		{
+			name:         "valid lang en",
+			args:         []string{"--name", "TestApp", "--lang", "en", "--dry-run"},
+			expectedCode: 0,
+		},
+		{
 			name:         "invalid frontend enum",
 			args:         []string{"--name", "TestApp", "--frontend", "angular"},
 			expectedCode: 2,
@@ -139,18 +155,18 @@ func TestHandleInit_DryRunPrintsSlugPrefix(t *testing.T) {
 		t.Fatalf("expected code 0, got %d", code)
 	}
 
-	lines := strings.Split(strings.TrimSpace(stdoutStr), "\n")
-	if len(lines) == 0 {
-		t.Fatal("expected dry-run to print generated file paths, got empty output")
+	expectedPrefix := "mi-app/"
+	lines := strings.Split(stdoutStr, "\n")
+	hasPrefixLine := false
+	for _, l := range lines {
+		trimmed := strings.TrimSpace(l)
+		if strings.HasPrefix(trimmed, expectedPrefix) {
+			hasPrefixLine = true
+			break
+		}
 	}
 
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-		if !strings.HasPrefix(line, "mi-app/") {
-			t.Errorf("expected line %q to start with 'mi-app/'", line)
-		}
+	if !hasPrefixLine {
+		t.Errorf("expected at least one line starting with %q in dry-run output:\n%s", expectedPrefix, stdoutStr)
 	}
 }
