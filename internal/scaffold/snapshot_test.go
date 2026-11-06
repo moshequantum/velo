@@ -39,6 +39,32 @@ func TestSnapshot_AstroSurrealdbTelegram(t *testing.T) {
 	})
 }
 
+func TestSnapshot_NextSurrealdbTelegram(t *testing.T) {
+	testComboSnapshot(t, "next-surrealdb-telegram", &wizard.State{
+		ProjectName:       "mi-app-next",
+		ProjectSlug:       "next-surrealdb-telegram",
+		Frontend:          "next",
+		Runtime:           "cloudflare-workers",
+		DataProvider:      "surrealdb",
+		DataURL:           "http://127.0.0.1:8000",
+		Cockpit:           "telegram",
+		TelegramBotHandle: "@NextBot",
+	})
+}
+
+func TestSnapshot_ReactViteSurrealdbTelegram(t *testing.T) {
+	testComboSnapshot(t, "react-vite-surrealdb-telegram", &wizard.State{
+		ProjectName:       "mi-app-vite",
+		ProjectSlug:       "react-vite-surrealdb-telegram",
+		Frontend:          "react-vite",
+		Runtime:           "cloudflare-pages",
+		DataProvider:      "surrealdb",
+		DataURL:           "http://127.0.0.1:8000",
+		Cockpit:           "telegram",
+		TelegramBotHandle: "@ViteBot",
+	})
+}
+
 func testComboSnapshot(t *testing.T, comboName string, state *wizard.State) {
 	goldenDir := filepath.Join("testdata", "golden", comboName)
 
