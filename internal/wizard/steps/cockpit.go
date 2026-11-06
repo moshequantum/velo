@@ -100,18 +100,18 @@ func (s *CockpitStep) View() string {
 
 	var title, desc, botLabel, ownerLabel, noteText, helpText string
 	if isEs {
-		title = tui.StyleTitle.Render("4. Cockpit de Operaciones (Telegram HITL)")
-		desc = tui.StyleSubtitle.Render("Configura el bot para notificaciones y aprobaciones humanas antes de mutar la DB:")
+		title = tui.StyleTitle.Render("3. Endpoints & Cockpit de Operaciones (HITL)")
+		desc = tui.StyleSubtitle.Render("Configura el endpoint de webhook y bot para aprobaciones humanas antes de mutar la DB:")
 		botLabel = "Handle del Bot:"
 		ownerLabel = "Telegram Owner ID (chat_id):"
-		noteText = "Nota: El webhook /api/telegram se generará automáticamente en tu arnés."
+		noteText = "Nota: El endpoint /api/telegram se generará con validación segura en tiempo constante."
 		helpText = "\n[ Tab ] Cambiar campo   [ Enter ] Siguiente   [ Esc ] Volver"
 	} else {
-		title = tui.StyleTitle.Render("4. Operations Cockpit (Telegram HITL)")
-		desc = tui.StyleSubtitle.Render("Configure the bot for notifications and human approvals before mutating the DB:")
+		title = tui.StyleTitle.Render("3. Endpoints & Operations Cockpit (HITL)")
+		desc = tui.StyleSubtitle.Render("Configure webhook endpoint and bot for human approvals before DB mutations:")
 		botLabel = "Bot Handle:"
 		ownerLabel = "Telegram Owner ID (chat_id):"
-		noteText = "Note: The webhook /api/telegram will be automatically generated in your harness."
+		noteText = "Note: The /api/telegram endpoint will be generated with constant-time security checks."
 		helpText = "\n[ Tab ] Switch field   [ Enter ] Next   [ Esc ] Back"
 	}
 

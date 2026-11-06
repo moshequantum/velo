@@ -136,8 +136,8 @@ func (s *DataStep) View() string {
 
 	var title, desc, urlPrompt, helpText string
 	if isEs {
-		title = tui.StyleTitle.Render("3. Capa de Datos & Persistencia")
-		desc = tui.StyleSubtitle.Render("Selecciona el proveedor de datos para tu backend:")
+		title = tui.StyleTitle.Render("2. Capa de Datos & Persistencia (DB)")
+		desc = tui.StyleSubtitle.Render("Selecciona el motor de persistencia para el arnés:")
 		urlPrompt = "URL del endpoint (opcional, configurable luego en .env/.dev.vars):"
 		if s.isInputURL {
 			helpText = "[ Enter ] Confirmar   [ Esc ] Cambiar proveedor"
@@ -145,8 +145,8 @@ func (s *DataStep) View() string {
 			helpText = "[ ↑/↓ ] Navegar   [ Enter ] Seleccionar   [ Esc ] Volver"
 		}
 	} else {
-		title = tui.StyleTitle.Render("3. Data Layer & Persistence")
-		desc = tui.StyleSubtitle.Render("Select the data provider for your backend:")
+		title = tui.StyleTitle.Render("2. Data Layer & Persistence (DB)")
+		desc = tui.StyleSubtitle.Render("Select database persistence engine for the harness:")
 		urlPrompt = "Endpoint URL (optional, configurable later in .env/.dev.vars):"
 		if s.isInputURL {
 			helpText = "[ Enter ] Confirm   [ Esc ] Change provider"

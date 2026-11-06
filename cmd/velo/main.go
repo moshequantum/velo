@@ -293,12 +293,14 @@ Flags para 'velo init':
 func runWizard() {
 	state := wizard.NewDefaultState()
 
+	// Contract-First Architecture order:
+	// Welcome -> Identity & Contracts -> Data Layer (DB) -> Endpoints & Cockpit -> Frontend & Delivery -> Review -> Install
 	wizardSteps := []tui.Step{
 		steps.NewWelcomeStep(state),
 		steps.NewNamingStep(state),
-		steps.NewStackStep(state),
 		steps.NewDataStep(state),
 		steps.NewCockpitStep(state),
+		steps.NewStackStep(state),
 		steps.NewReviewStep(state),
 		steps.NewInstallStep(state),
 	}

@@ -91,12 +91,12 @@ func (s *StackStep) View() string {
 
 	var title, desc, helpText string
 	if isEs {
-		title = tui.StyleTitle.Render("2. Arquitectura de Frontend & Edge")
-		desc = tui.StyleSubtitle.Render("Elige la base del sistema visual y su runtime en Cloudflare:")
+		title = tui.StyleTitle.Render("4. Frontend & Arquitectura de Entrega")
+		desc = tui.StyleSubtitle.Render("Empaqueta y entrega tu frontend en Cloudflare para consumir los contratos y la DB:")
 		helpText = "\n[ ↑/↓ ] Navegar   [ Enter ] Seleccionar   [ Esc ] Volver"
 	} else {
-		title = tui.StyleTitle.Render("2. Frontend & Edge Architecture")
-		desc = tui.StyleSubtitle.Render("Choose visual framework and Cloudflare runtime:")
+		title = tui.StyleTitle.Render("4. Frontend & Delivery Architecture")
+		desc = tui.StyleSubtitle.Render("Bundle and deliver your frontend on Cloudflare to consume contracts and DB:")
 		helpText = "\n[ ↑/↓ ] Navigate   [ Enter ] Select   [ Esc ] Back"
 	}
 

@@ -76,14 +76,14 @@ func (s *NamingStep) View() string {
 
 	var title, desc, slugLabel, dirLabel, helpText string
 	if isEs {
-		title = tui.StyleTitle.Render("1. Nombre del Proyecto")
-		desc = tui.StyleSubtitle.Render("¿Cómo se llamará el proyecto o cliente?")
+		title = tui.StyleTitle.Render("1. Identidad del Proyecto & Contratos")
+		desc = tui.StyleSubtitle.Render("Nombre del proyecto y espacio de nombres del contrato OpenPassport:")
 		slugLabel = "Slug canónico"
 		dirLabel = "Directorio"
 		helpText = "[ Enter ] Continuar   [ Esc ] Volver"
 	} else {
-		title = tui.StyleTitle.Render("1. Project Name")
-		desc = tui.StyleSubtitle.Render("What will the project or client be named?")
+		title = tui.StyleTitle.Render("1. Project Identity & Contracts")
+		desc = tui.StyleSubtitle.Render("Project name and OpenPassport contract namespace:")
 		slugLabel = "Canonical slug"
 		dirLabel = "Directory"
 		helpText = "[ Enter ] Continue   [ Esc ] Back"
