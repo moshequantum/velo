@@ -17,9 +17,8 @@ func TestGenerate_SecurityGuarantees(t *testing.T) {
 		ProjectSlug:       "sec-app",
 		Frontend:          "astro",
 		Runtime:           "cloudflare-pages",
-		BaaS:              "insforge",
-		InsForgeProjectID: "https://my-insforge-cluster.internal",
-		InsForgeAnonKey:   "SUPER_SECRET_LEAKED_KEY_12345",
+		DataProvider:      "insforge",
+		DataURL:           "https://my-insforge-cluster.internal",
 		Cockpit:           "telegram",
 		TelegramBotHandle: "TestSecBot",
 		TelegramOwnerID:   "9988776655",
@@ -38,16 +37,13 @@ func TestGenerate_SecurityGuarantees(t *testing.T) {
 	if err != nil {
 		t.Fatalf("reading .env.example: %v", err)
 	}
-	envContent := string(envBytes)
+	envContent := strings.ReplaceAll(string(envBytes), "\r\n", "\n")
 
-	if strings.Contains(envContent, testSecretState.InsForgeAnonKey) {
-		t.Errorf("CRITICAL SECURITY FLAW: .env.example contains InsForgeAnonKey!")
-	}
 	if strings.Contains(envContent, testSecretState.TelegramOwnerID) {
 		t.Errorf("SECURITY FLAW: .env.example contains TelegramOwnerID!")
 	}
-	if strings.Contains(envContent, testSecretState.InsForgeProjectID) {
-		t.Errorf("SECURITY FLAW: .env.example contains InsForgeProjectID!")
+	if strings.Contains(envContent, testSecretState.DataURL) {
+		t.Errorf("SECURITY FLAW: .env.example contains DataURL!")
 	}
 
 	// All keys must be empty in .env.example

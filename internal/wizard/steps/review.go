@@ -41,24 +41,24 @@ func (s *ReviewStep) View() string {
 
 	bot := s.state.TelegramBotHandle
 	if bot == "" {
-		bot = "(Sin configurar)"
+		bot = "(Sin bot)"
 	}
-	insforge := s.state.InsForgeProjectID
-	if insforge == "" {
-		insforge = "(Configurar en .env)"
+	dataDesc := s.state.DataProvider
+	if s.state.DataURL != "" {
+		dataDesc += fmt.Sprintf(" (%s)", s.state.DataURL)
 	}
 
 	summary := fmt.Sprintf(`  • Proyecto:     %s (%s)
   • Frontend:     %s
   • Runtime:      %s
-  • Base de datos: PostgreSQL vía %s
+  • Datos:        %s
   • Cockpit:      Telegram HITL %s
-  • Infra Cost:   $0.00 / mes`,
+  • Modo:         Free-tier first`,
 		tui.StyleSelected.Render(s.state.ProjectName),
 		s.state.ProjectSlug,
 		tui.StyleSelected.Render(s.state.Frontend),
 		tui.StyleSelected.Render(s.state.Runtime),
-		tui.StyleSelected.Render(insforge),
+		tui.StyleSelected.Render(dataDesc),
 		tui.StyleSelected.Render(bot),
 	)
 

@@ -5,26 +5,17 @@ import (
 	"github.com/moshequantum/velo/internal/tui"
 )
 
+// Model manages step-by-step navigation in the interactive wizard.
 type Model struct {
-	state   *State
 	steps   []tui.Step
 	current int
 }
 
-func NewModel() Model {
-	state := NewDefaultState()
-	return NewModelWithState(state)
-}
-
-func NewModelWithState(state *State) Model {
+func NewModel(steps []tui.Step) Model {
 	return Model{
-		state:   state,
+		steps:   steps,
 		current: 0,
 	}
-}
-
-func (m *Model) SetSteps(steps []tui.Step) {
-	m.steps = steps
 }
 
 func (m Model) Init() tea.Cmd {
@@ -69,8 +60,7 @@ func (m Model) View() string {
 
 // Run executes the full wizard program.
 func Run(steps []tui.Step) error {
-	m := NewModel()
-	m.SetSteps(steps)
+	m := NewModel(steps)
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	_, err := p.Run()
 	return err

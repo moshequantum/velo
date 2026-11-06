@@ -18,11 +18,11 @@ func TestSnapshot_AstroInsforgeTelegram(t *testing.T) {
 
 	state := &wizard.State{
 		ProjectName:       "mi-app-velo",
-		ProjectSlug:       "mi-app-velo",
+		ProjectSlug:       "astro-insforge-telegram",
 		Frontend:          "astro",
 		Runtime:           "cloudflare-pages",
-		BaaS:              "insforge",
-		InsForgeProjectID: "",
+		DataProvider:      "insforge",
+		DataURL:           "",
 		Cockpit:           "telegram",
 		TelegramBotHandle: "",
 		TargetDir:         t.TempDir(),

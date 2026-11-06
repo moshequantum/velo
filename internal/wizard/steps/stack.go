@@ -16,24 +16,36 @@ type StackStep struct {
 var stackChoices = []struct {
 	Key         string
 	Title       string
+	Runtime     string
 	Description string
 }{
 	{
 		Key:         "astro",
-		Title:       "Astro + Cloudflare Pages (Recomendado)",
+		Title:       "Astro + Cloudflare Pages (Default)",
+		Runtime:     "cloudflare-pages",
 		Description: "Velocidad extrema, SSR/Static híbrido, Islas React y API routes unificadas.",
+	},
+	{
+		Key:         "next",
+		Title:       "Next.js + Cloudflare Workers",
+		Runtime:     "cloudflare-workers",
+		Description: "App Router moderno adaptado al Edge con OpenNext.",
 	},
 	{
 		Key:         "react-vite",
 		Title:       "React + Vite SPA",
-		Description: "SPA clásico en Cloudflare Pages sin SSR.",
+		Runtime:     "cloudflare-pages",
+		Description: "SPA clásico en Cloudflare Pages con funciones Edge.",
 	},
 }
 
 func NewStackStep(state *wizard.State) *StackStep {
 	cursor := 0
-	if state.Frontend == "react-vite" {
-		cursor = 1
+	for i, c := range stackChoices {
+		if c.Key == state.Frontend {
+			cursor = i
+			break
+		}
 	}
 	return &StackStep{state: state, cursor: cursor}
 }
@@ -55,7 +67,9 @@ func (s *StackStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 				s.cursor++
 			}
 		case "enter", " ":
-			s.state.Frontend = stackChoices[s.cursor].Key
+			chosen := stackChoices[s.cursor]
+			s.state.Frontend = chosen.Key
+			s.state.Runtime = chosen.Runtime
 			return s, tui.Next()
 		case "esc":
 			return s, tui.Back()
@@ -68,17 +82,15 @@ func (s *StackStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 
 func (s *StackStep) View() string {
 	title := tui.StyleTitle.Render("2. Arquitectura de Frontend & Edge")
-	desc := tui.StyleSubtitle.Render("Elige la base del sistema visual y sus rutas en Cloudflare:")
+	desc := tui.StyleSubtitle.Render("Elige la base del sistema visual y su runtime en Cloudflare:")
 
 	var options string
 	for i, choice := range stackChoices {
 		prefix := "  "
-		cursorMarker := " "
+		cursorMarker := "○"
 		if s.cursor == i {
 			prefix = "> "
 			cursorMarker = "●"
-		} else {
-			cursorMarker = "○"
 		}
 
 		line := fmt.Sprintf("%s%s %s\n    %s\n",

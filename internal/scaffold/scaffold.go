@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -22,6 +23,8 @@ type templateContext struct {
 	ProjectSlug       string
 	Frontend          string
 	Runtime           string
+	DataProvider      string
+	DataURL           string
 	BaaSProvider      string
 	BaaSURL           string
 	Cockpit           string
@@ -32,23 +35,27 @@ type templateContext struct {
 // Generate scaffolds the complete Velo harness based on the wizard State using composable templates (C3).
 func Generate(state *wizard.State) error {
 	baseDir := filepath.Join(state.TargetDir, state.ProjectSlug)
-	if err := os.MkdirAll(baseDir, 0755); err != nil {
-		return fmt.Errorf("creating project directory: %w", err)
+	if !state.DryRun {
+		if err := os.MkdirAll(baseDir, 0755); err != nil {
+			return fmt.Errorf("creating project directory: %w", err)
+		}
 	}
 
-	baasProvider := state.BaaS
-	if baasProvider == "" {
-		baasProvider = "insforge"
+	dataProvider := state.DataProvider
+	if dataProvider == "" {
+		dataProvider = "surrealdb"
 	}
-	baasURL := state.InsForgeProjectID
+	dataURL := state.DataURL
 
 	ctx := templateContext{
 		ProjectName:       state.ProjectName,
 		ProjectSlug:       state.ProjectSlug,
 		Frontend:          state.Frontend,
 		Runtime:           state.Runtime,
-		BaaSProvider:      baasProvider,
-		BaaSURL:           baasURL,
+		DataProvider:      dataProvider,
+		DataURL:           dataURL,
+		BaaSProvider:      dataProvider,
+		BaaSURL:           dataURL,
 		Cockpit:           state.Cockpit,
 		TelegramBotHandle: state.TelegramBotHandle,
 		TelegramOwnerID:   state.TelegramOwnerID,
@@ -58,7 +65,7 @@ func Generate(state *wizard.State) error {
 	layers := []string{
 		"templates/base",
 		fmt.Sprintf("templates/frontend/%s", state.Frontend),
-		fmt.Sprintf("templates/data/%s", baasProvider),
+		fmt.Sprintf("templates/data/%s", dataProvider),
 	}
 	if state.Cockpit != "" && state.Cockpit != "none" {
 		layers = append(layers, fmt.Sprintf("templates/cockpit/%s", state.Cockpit))
@@ -117,6 +124,21 @@ func Generate(state *wizard.State) error {
 		if err != nil {
 			return fmt.Errorf("processing layer %s: %w", layer, err)
 		}
+	}
+
+	if state.DryRun {
+		var paths []string
+		for relPath := range renderedFiles {
+			if strings.HasSuffix(relPath, ".gitkeep") {
+				continue
+			}
+			paths = append(paths, fmt.Sprintf("%s/%s", state.ProjectSlug, filepath.ToSlash(relPath)))
+		}
+		sort.Strings(paths)
+		for _, p := range paths {
+			fmt.Println(p)
+		}
+		return nil
 	}
 
 	for relPath, data := range renderedFiles {

@@ -2,7 +2,6 @@ package steps
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -48,7 +47,7 @@ func (s *NamingStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 				val = "mi-proyecto-edge"
 			}
 			s.state.ProjectName = val
-			s.state.ProjectSlug = slugify(val)
+			s.state.ProjectSlug = wizard.Slugify(val)
 			return s, tui.Next()
 		case "esc":
 			return s, tui.Back()
@@ -65,7 +64,7 @@ func (s *NamingStep) View() string {
 	title := tui.StyleTitle.Render("1. Nombre del Proyecto")
 	desc := tui.StyleSubtitle.Render("¿Cómo se llamará el proyecto o cliente?")
 
-	slugPreview := slugify(s.textInput.Value())
+	slugPreview := wizard.Slugify(s.textInput.Value())
 	if slugPreview == "" {
 		slugPreview = "mi-proyecto-edge"
 	}
@@ -79,10 +78,4 @@ func (s *NamingStep) View() string {
 
 	content := fmt.Sprintf("%s\n%s\n\n%s\n%s\n%s", title, desc, s.textInput.View(), preview, help)
 	return tui.StyleBox.Render(content)
-}
-
-func slugify(s string) string {
-	re := regexp.MustCompile(`[^a-zA-Z0-9\-_]+`)
-	slug := strings.ToLower(re.ReplaceAllString(s, "-"))
-	return strings.Trim(slug, "-")
 }
