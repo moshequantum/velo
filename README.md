@@ -1,8 +1,8 @@
 <div align="center">
 
-# ⚡ Velo Framework
+<img src="assets/velo-banner.png" alt="Velo Framework — Multiversa Group" width="100%" />
 
-**The Free-Tier-First Edge & Headless Infrastructure Harness**
+<br/><br/>
 
 [![Release](https://img.shields.io/github/v/release/moshequantum/velo?color=00E5FF&label=Release&style=flat-square)](https://github.com/moshequantum/velo/releases)
 [![Go Version](https://img.shields.io/badge/Go-%3E%3D%201.27.1-7C4DFF?style=flat-square&logo=go)](https://go.dev)

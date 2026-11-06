@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Velo Framework Banner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #161424;
+    --indigo-lav: #2e284a;
+    --warm-ink: #1e1d1a;
+    --primary: #a78bfa;
+    --primary-soft: #c4b5fd;
+    --citrus: #ebffc0;
+    --citrus-rgb: 235 255 192;
+    --peach: #f7b299;
+    --coral: #e58f73;
+    --pink: #f6c6d8;
+    --butter: #fce38a;
+    --lav-c: #d4c4fb;
+    --serif: "Instrument Serif", Georgia, serif;
+    --sans: "Plus Jakarta Sans", -apple-system, system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    width: 1200px;
+    height: 500px;
+    margin: 0;
+    overflow: hidden;
+    font-family: var(--sans);
+    color: #fafafa;
+    position: relative;
+    background:
+      radial-gradient(65% 65% at 6% 92%, rgba(247, 178, 153, 0.42), transparent 70%),
+      radial-gradient(55% 55% at 94% 8%, rgba(212, 196, 251, 0.38), transparent 70%),
+      radial-gradient(40% 40% at 50% 50%, rgba(167, 139, 250, 0.20), transparent 70%),
+      radial-gradient(35% 35% at 85% 85%, rgba(252, 227, 138, 0.22), transparent 70%),
+      linear-gradient(180deg, #161424 0%, #2e284a 55%, #181622 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 64px;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='discrete' tableValues='.12 1'/%3E%3CfeFuncG type='discrete' tableValues='.11 1'/%3E%3CfeFuncB type='discrete' tableValues='.14 1'/%3E%3CfeFuncA type='table' tableValues='.18 0 .18'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='192' height='192' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.35;
+  }
+
+  /* Subtle celestial wireframe in background */
+  .wireframe-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .wireframe-bg svg {
+    width: 100%;
+    height: 100%;
+    stroke: rgba(255, 255, 255, 0.12);
+    fill: none;
+  }
+
+  /* Main Left Container */
+  .left-content {
+    position: relative;
+    z-index: 2;
+    max-width: 650px;
+  }
+
+  /* Folio / Eyebrow */
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(250, 250, 250, 0.75);
+    margin-bottom: 18px;
+  }
+
+  .citrus-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--citrus);
+    box-shadow: 0 0 12px 2px rgba(235, 255, 192, 0.95);
+  }
+
+  .eyebrow i {
+    width: 36px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Title */
+  h1 {
+    font-family: var(--serif);
+    font-size: 4.8rem;
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--primary-soft);
+    background: linear-gradient(110deg, #ffffff 30%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .lightning-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(235, 255, 192, 0.22) 0%, rgba(167, 139, 250, 0.15) 100%);
+    border: 1px solid rgba(235, 255, 192, 0.5);
+    box-shadow: 0 10px 24px -8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .lightning-badge svg {
+    width: 30px;
+    height: 30px;
+    fill: var(--citrus);
+    filter: drop-shadow(0 0 8px rgba(235, 255, 192, 0.7));
+  }
+
+  /* Subtitle */
+  .subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: rgba(250, 250, 250, 0.88);
+    letter-spacing: -0.01em;
+    margin-bottom: 18px;
+  }
+
+  /* Multitone Brand Gradient Line */
+  .brand-line {
+    width: 280px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #fce38a 0%, #f7b299 28%, #f6c6d8 50%, #c4b5fd 74%, #a78bfa 100%);
+    margin-bottom: 24px;
+  }
+
+  /* Architecture Pillars Row */
+  .pillars-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .pill .pdot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  .pdot-edge { background: #00E5FF; box-shadow: 0 0 6px #00E5FF; }
+  .pdot-db { background: #FF5470; box-shadow: 0 0 6px #FF5470; }
+  .pdot-hitl { background: #2AABEE; box-shadow: 0 0 6px #2AABEE; }
+  .pdot-passport { background: #a78bfa; box-shadow: 0 0 6px #a78bfa; }
+
+  /* Guarantee footer */
+  .guarantee {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .guarantee span {
+    color: var(--citrus);
+    font-weight: 600;
+  }
+
+  /* Right Stage / Passport Window Emblem */
+  .right-stage {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 380px;
+    height: 420px;
+  }
+
+  .passport-card {
+    position: relative;
+    width: 290px;
+    height: 390px;
+    border-radius: 145px 145px 34px 34px;
+    padding: 12px;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 55%, rgba(255, 255, 255, 0.10) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 34px 70px -30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Dreamcore Window */
+  .window {
+    width: 100%;
+    height: 220px;
+    border-radius: 133px 133px 20px 20px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #d4c4fb 0%, #f7b299 65%, #fce38a 100%);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Ambient clouds in window */
+  .window .c1 {
+    position: absolute;
+    width: 170px;
+    height: 85px;
+    left: 8px;
+    top: 45px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(167, 139, 250, 0.9), transparent);
+  }
+
+  .window .c2 {
+    position: absolute;
+    width: 140px;
+    height: 70px;
+    right: -15px;
+    top: 85px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), transparent);
+  }
+
+  .window .c3 {
+    position: absolute;
+    width: 150px;
+    height: 70px;
+    left: -20px;
+    bottom: 8px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(252, 227, 138, 0.75), transparent);
+  }
+
+  /* Citrus glint spark in window */
+  .glint-center {
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glint-aura {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(235, 255, 192, 0.95) 0%, rgba(235, 255, 192, 0.4) 40%, transparent 70%);
+  }
+
+  .glint-spark {
+    width: 22px;
+    height: 22px;
+    background: var(--citrus);
+    clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+    box-shadow: 0 0 16px 4px rgba(235, 255, 192, 0.9);
+  }
+
+  /* Passport card bottom info */
+  .passport-meta {
+    padding-top: 14px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .passport-meta .tag-id {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .passport-meta h3 {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1.1;
+    color: #ffffff;
+    margin: 4px 0 2px;
+  }
+
+  .passport-meta .author {
+    font-size: 0.72rem;
+    color: var(--primary-soft);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Three dots lens */
+  .lens-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .lens-dots .ldot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .ldot1 { background: linear-gradient(135deg, #f7b299, #e58f73); }
+  .ldot2 { background: linear-gradient(135deg, #a78bfa, #c4b5fd); }
+  .ldot3 { background: linear-gradient(135deg, #fce38a, #ebffc0); }
+
+  /* Circular Stamp */
+  .passport-stamp {
+    position: absolute;
+    right: -16px;
+    bottom: -16px;
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+  }
+
+  .passport-stamp svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Wireframe Celestial Geometry in Background -->
+  <div class="wireframe-bg">
+    <svg viewBox="0 0 1200 500" preserveAspectRatio="none">
+      <circle cx="980" cy="250" r="180" stroke-width="1" stroke-dasharray="3 6" opacity="0.45" />
+      <circle cx="980" cy="250" r="230" stroke-width="1" opacity="0.3" />
+      <circle cx="980" cy="250" r="310" stroke-width="1" stroke-dasharray="1 5" opacity="0.2" />
+      
+      <!-- Axis Crosses -->
+      <path d="M970 250 H990 M980 240 V260" stroke-width="1" opacity="0.6" stroke="#ebffc0" />
+      <path d="M120 70 H130 M125 65 V75" stroke-width="1" opacity="0.35" />
+      <path d="M600 440 H610 M605 435 V445" stroke-width="1" opacity="0.3" />
+      <path d="M80 410 H90 M85 405 V415" stroke-width="1" opacity="0.25" />
+      <path d="M1120 100 H1130 M1125 95 V105" stroke-width="1" opacity="0.35" />
+    </svg>
+  </div>
+
+  <!-- Left Hero Content -->
+  <div class="left-content">
+    <div class="eyebrow">
+      <span class="citrus-dot"></span>
+      <span>Multiversa Group · Open Ecosystem</span>
+      <i></i>
+      <span>v0.2.0</span>
+    </div>
+
+    <h1>
+      <div class="lightning-badge">
+        <svg viewBox="0 0 24 24">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+      </div>
+      Velo <em>Framework</em>
+    </h1>
+
+    <div class="subtitle">
+      The Zero-Cost Edge &amp; Headless Infrastructure Harness
+    </div>
+
+    <div class="brand-line"></div>
+
+    <div class="pillars-row">
+      <div class="pill">
+        <span class="pdot pdot-edge"></span>
+        <span>Astro · Next.js · Vite</span>
+      </div>
+      <div class="pill">
+        <span class="pdot pdot-db"></span>
+        <span>SurrealDB · InsForge</span>
+      </div>
+      <div class="pill">
+        <span class="pdot pdot-hitl"></span>
+        <span>Telegram Cockpit</span>
+      </div>
+      <div class="pill">
+        <span class="pdot pdot-passport"></span>
+        <span>OpenPassport v1.0</span>
+      </div>
+    </div>
+
+    <div class="guarantee">
+      <div><span>$0</span> INFRASTRUCTURE</div>
+      <div>•</div>
+      <div><span>AI-FIRST</span> ARCHITECTURE</div>
+      <div>•</div>
+      <div><span>CONTRACT-FIRST</span> INTEGRITY</div>
+    </div>
+  </div>
+
+  <!-- Right Stage Emblem -->
+  <div class="right-stage">
+    <div class="passport-card">
+      <div class="window">
+        <div class="c1"></div>
+        <div class="c2"></div>
+        <div class="c3"></div>
+        <div class="glint-center">
+          <div class="glint-aura"></div>
+          <div class="glint-spark"></div>
+        </div>
+      </div>
+
+      <div class="passport-meta">
+        <div class="tag-id">PASSPORT NO. 2026-VELO</div>
+        <h3>Velo OS</h3>
+        <div class="author">Multiversa Group LLC</div>
+        
+        <div class="lens-dots">
+          <div class="ldot ldot1"></div>
+          <div class="ldot ldot2"></div>
+          <div class="ldot ldot3"></div>
+        </div>
+      </div>
+
+      <!-- Verified Stamp -->
+      <div class="passport-stamp">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(235, 255, 192, 0.45)" stroke-width="1" />
+          <circle cx="50" cy="50" r="39" fill="none" stroke="rgba(235, 255, 192, 0.3)" stroke-width="1" stroke-dasharray="3 3" />
+          <path id="stamp-text-path" d="M 50, 50 m -33, 0 a 33,33 0 1,1 66,0 a 33,33 0 1,1 -66,0" fill="none"/>
+          <text fill="#ebffc0" font-size="7.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" letter-spacing="2.2">
+            <textPath href="#stamp-text-path" startOffset="5%">
+              VERIFIED · OPENPASSPORT ·
+            </textPath>
+          </text>
+          <polygon points="50,42 53,48 59,49 54,54 56,60 50,56 44,60 46,54 41,49 47,48" fill="#ebffc0" opacity="0.85" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
