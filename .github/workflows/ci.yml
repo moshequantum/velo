@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    name: Lint, Vet & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Check Formatting (gofmt)
+        run: |
+          diffs=$(gofmt -l .)
+          if [ -n "$diffs" ]; then
+            echo "Unformatted files found:"
+            echo "$diffs"
+            exit 1
+          fi
+
+      - name: Run Go Vet
+        run: go vet ./...
+
+      - name: Run Unit Tests
+        run: go test -v -count=1 ./...
+
+  build-matrix:
+    name: Build Cross-Platform Matrix
+    needs: verify
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: windows
+            arch: amd64
+            output: velo-windows-amd64.exe
+          - os: linux
+            arch: amd64
+            output: velo-linux-amd64
+          - os: darwin
+            arch: arm64
+            output: velo-darwin-arm64
+          - os: darwin
+            arch: amd64
+            output: velo-darwin-amd64
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build Binary (${{ matrix.os }}/${{ matrix.arch }})
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+        run: go build -v -o "dist/${{ matrix.output }}" ./cmd/velo
