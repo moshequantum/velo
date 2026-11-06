@@ -118,6 +118,14 @@ func Generate(state *wizard.State) error {
 				destBytes = content
 			}
 
+			// Append configuration files across layers (.dev.vars.example, .env.example)
+			if strings.HasSuffix(destRel, ".dev.vars.example") || strings.HasSuffix(destRel, ".env.example") {
+				if prev, exists := renderedFiles[destRel]; exists {
+					merged := append(bytes.TrimRight(prev, "\r\n"), '\n')
+					destBytes = append(merged, bytes.TrimLeft(destBytes, "\r\n")...)
+				}
+			}
+
 			renderedFiles[destRel] = destBytes
 			return nil
 		})

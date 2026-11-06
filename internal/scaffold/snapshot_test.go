@@ -14,9 +14,7 @@ import (
 var update = flag.Bool("update", false, "update golden snapshot files")
 
 func TestSnapshot_AstroInsforgeTelegram(t *testing.T) {
-	goldenDir := filepath.Join("testdata", "golden", "astro-insforge-telegram")
-
-	state := &wizard.State{
+	testComboSnapshot(t, "astro-insforge-telegram", &wizard.State{
 		ProjectName:       "mi-app-velo",
 		ProjectSlug:       "astro-insforge-telegram",
 		Frontend:          "astro",
@@ -25,8 +23,24 @@ func TestSnapshot_AstroInsforgeTelegram(t *testing.T) {
 		DataURL:           "",
 		Cockpit:           "telegram",
 		TelegramBotHandle: "",
-		TargetDir:         t.TempDir(),
-	}
+	})
+}
+
+func TestSnapshot_AstroSurrealdbTelegram(t *testing.T) {
+	testComboSnapshot(t, "astro-surrealdb-telegram", &wizard.State{
+		ProjectName:       "mi-app-surreal",
+		ProjectSlug:       "astro-surrealdb-telegram",
+		Frontend:          "astro",
+		Runtime:           "cloudflare-pages",
+		DataProvider:      "surrealdb",
+		DataURL:           "http://127.0.0.1:8000",
+		Cockpit:           "telegram",
+		TelegramBotHandle: "@MyBot",
+	})
+}
+
+func testComboSnapshot(t *testing.T, comboName string, state *wizard.State) {
+	goldenDir := filepath.Join("testdata", "golden", comboName)
 
 	if *update {
 		if err := os.RemoveAll(goldenDir); err != nil {
@@ -47,13 +61,13 @@ func TestSnapshot_AstroInsforgeTelegram(t *testing.T) {
 	// Render to temp dir
 	tmpDir := t.TempDir()
 	state.TargetDir = tmpDir
-	state.ProjectSlug = "astro-insforge-telegram"
+	state.ProjectSlug = comboName
 
 	if err := Generate(state); err != nil {
 		t.Fatalf("Generate failed: %v", err)
 	}
 
-	outDir := filepath.Join(tmpDir, "astro-insforge-telegram")
+	outDir := filepath.Join(tmpDir, comboName)
 
 	// Compare outDir with goldenDir
 	err := filepath.Walk(goldenDir, func(goldenPath string, info fs.FileInfo, err error) error {
@@ -80,7 +94,6 @@ func TestSnapshot_AstroInsforgeTelegram(t *testing.T) {
 			return err
 		}
 
-		// Normalize line endings for comparison
 		normGolden := bytes.ReplaceAll(goldenBytes, []byte("\r\n"), []byte("\n"))
 		normOut := bytes.ReplaceAll(outBytes, []byte("\r\n"), []byte("\n"))
 
