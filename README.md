@@ -10,7 +10,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-15.0-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![Cloudflare](https://img.shields.io/badge/Runtime-Cloudflare%20Pages%20%2F%20Workers-F38020?style=flat-square&logo=cloudflare)](https://cloudflare.com)
 [![SurrealDB](https://img.shields.io/badge/Data-SurrealDB%20(Default)-FF0055?style=flat-square)](https://surrealdb.com)
-[![License](https://img.shields.io/badge/License-MIT-white?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square)](LICENSE)
 
 <p align="center">
   Stop wasting engineering hours wiring repetitive boilerplate. Velo packages proven edge architectures into production-ready, auditable operational harnesses designed for generous free tiers.
@@ -204,6 +204,6 @@ Cada afirmación técnica del framework está respaldada por código y suites de
 
 ## 📄 License
 
-Velo Framework is open-source software licensed under the **[MIT License](LICENSE)**.
+Velo Framework is open-source software licensed under the **[Apache License 2.0](LICENSE)**.
 
 Designed and maintained by **[Multiversa Group LLC](https://multiversa.group)**.
