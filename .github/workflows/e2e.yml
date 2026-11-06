@@ -1,0 +1,33 @@
+name: E2E Integration Gate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  integration-gate:
+    name: W9 Integration Gate Matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Setup Node.js & pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.1
+          run_install: false
+
+      - name: Run E2E Test Matrix
+        run: node scripts/e2e/test_matrix.mjs

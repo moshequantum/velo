@@ -19,7 +19,11 @@ type CockpitStep struct {
 
 func NewCockpitStep(state *wizard.State) *CockpitStep {
 	b := textinput.New()
-	b.Placeholder = "@MiProyecto_bot (opcional)"
+	if state.IsSpanish() {
+		b.Placeholder = "@MiProyecto_bot (opcional)"
+	} else {
+		b.Placeholder = "@MyProject_bot (optional)"
+	}
 	b.Focus()
 	b.Width = 35
 	if state.TelegramBotHandle != "" {
@@ -27,7 +31,11 @@ func NewCockpitStep(state *wizard.State) *CockpitStep {
 	}
 
 	o := textinput.New()
-	o.Placeholder = "Tu ID numérico de Telegram (chat_id)"
+	if state.IsSpanish() {
+		o.Placeholder = "Tu ID numérico de Telegram (chat_id)"
+	} else {
+		o.Placeholder = "Your numeric Telegram ID (chat_id)"
+	}
 	o.Width = 35
 	if state.TelegramOwnerID != "" {
 		o.SetValue(state.TelegramOwnerID)
@@ -88,14 +96,30 @@ func (s *CockpitStep) updateFocus() {
 }
 
 func (s *CockpitStep) View() string {
-	title := tui.StyleTitle.Render("4. Cockpit de Operaciones (Telegram HITL)")
-	desc := tui.StyleSubtitle.Render("Configura el bot para notificaciones y aprobaciones humanas antes de mutar la DB:")
+	isEs := s.state.IsSpanish()
 
-	input1 := fmt.Sprintf("Handle del Bot:\n%s\n", s.botHandle.View())
-	input2 := fmt.Sprintf("Telegram Owner ID (chat_id):\n%s\n", s.ownerID.View())
+	var title, desc, botLabel, ownerLabel, noteText, helpText string
+	if isEs {
+		title = tui.StyleTitle.Render("3. Endpoints & Cockpit de Operaciones (HITL)")
+		desc = tui.StyleSubtitle.Render("Configura el endpoint de webhook y bot para aprobaciones humanas antes de mutar la DB:")
+		botLabel = "Handle del Bot:"
+		ownerLabel = "Telegram Owner ID (chat_id):"
+		noteText = "Nota: El endpoint /api/telegram se generará con validación segura en tiempo constante."
+		helpText = "\n[ Tab ] Cambiar campo   [ Enter ] Siguiente   [ Esc ] Volver"
+	} else {
+		title = tui.StyleTitle.Render("3. Endpoints & Operations Cockpit (HITL)")
+		desc = tui.StyleSubtitle.Render("Configure webhook endpoint and bot for human approvals before DB mutations:")
+		botLabel = "Bot Handle:"
+		ownerLabel = "Telegram Owner ID (chat_id):"
+		noteText = "Note: The /api/telegram endpoint will be generated with constant-time security checks."
+		helpText = "\n[ Tab ] Switch field   [ Enter ] Next   [ Esc ] Back"
+	}
 
-	note := tui.StyleSubtitle.Render("Nota: El endpoint /api/telegram se generará automáticamente en Astro.")
-	help := tui.StyleSubtitle.Render("\n[ Tab ] Cambiar campo   [ Enter ] Siguiente   [ Esc ] Volver")
+	input1 := fmt.Sprintf("%s\n%s\n", botLabel, s.botHandle.View())
+	input2 := fmt.Sprintf("%s\n%s\n", ownerLabel, s.ownerID.View())
+
+	note := tui.StyleSubtitle.Render(noteText)
+	help := tui.StyleSubtitle.Render(helpText)
 
 	content := fmt.Sprintf("%s\n%s\n\n%s\n%s\n%s\n%s", title, desc, input1, input2, note, help)
 	return tui.StyleBox.Render(content)

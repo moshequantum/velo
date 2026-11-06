@@ -1,0 +1,23 @@
+{
+  "name": "{{.ProjectSlug}}",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"{{if eq .DataProvider "surrealdb"}},
+    "db:local": "surreal start --user root --pass root memory",
+    "db:migrate": "surreal import --conn http://127.0.0.1:8000 --user root --pass root --ns test --db test db/schema.surql"{{end}}
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.0.0",
+    "@astrojs/react": "^4.0.0",
+    "@astrojs/tailwind": "^5.0.0",
+    "astro": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^3.4.0"{{if eq .DataProvider "surrealdb"}},
+    "surrealdb": "2.2.2"{{end}}
+  }
+}

@@ -1,0 +1,20 @@
+// velo.config.ts — Contrato de Infraestructura Velo
+export default {
+  project: {
+    name: "{{.ProjectName}}",
+    slug: "{{.ProjectSlug}}",
+    version: "1.0.0"
+  },
+  frontend: {
+    framework: "{{.Frontend}}",
+    runtime: "{{.Runtime}}"
+  },
+  baas: {
+    provider: "{{.BaaSProvider}}",
+    url: "{{.BaaSURL}}"
+  },
+  cockpit: {
+    provider: "{{.Cockpit}}",
+    botHandle: "{{.TelegramBotHandle}}"
+  }
+};

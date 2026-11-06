@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="100%" height="100%">
+  <defs>
+    <!-- Fonts -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap');
+
+      .f-serif { font-family: 'Instrument Serif', Georgia, serif; }
+      .f-sans { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+      
+      .pill-text { font-size: 13.5px; fill: #f3f0fc; font-weight: 500; letter-spacing: 0.03em; }
+      .tag-text { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; }
+    </style>
+
+    <!-- Gradients -->
+    <linearGradient id="bg-deep" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#161424"/>
+      <stop offset="55%" stop-color="#2e284a"/>
+      <stop offset="100%" stop-color="#181622"/>
+    </linearGradient>
+
+    <radialGradient id="glow-peach" cx="6%" cy="92%" r="55%">
+      <stop offset="0%" stop-color="#f7b299" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#f7b299" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="glow-lav" cx="94%" cy="8%" r="50%">
+      <stop offset="0%" stop-color="#d4c4fb" stop-opacity="0.40"/>
+      <stop offset="100%" stop-color="#d4c4fb" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="glow-primary" cx="50%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="brand-line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fce38a"/>
+      <stop offset="28%" stop-color="#f7b299"/>
+      <stop offset="50%" stop-color="#f6c6d8"/>
+      <stop offset="74%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+
+    <linearGradient id="glass-card" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.10"/>
+    </linearGradient>
+
+    <linearGradient id="glass-pill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05"/>
+    </linearGradient>
+
+    <linearGradient id="window-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d4c4fb"/>
+      <stop offset="65%" stop-color="#f7b299"/>
+      <stop offset="100%" stop-color="#fce38a"/>
+    </linearGradient>
+
+    <linearGradient id="text-title-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#c4b5fd"/>
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="soft-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="25" stdDeviation="20" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+
+    <filter id="citrus-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="500" fill="url(#bg-deep)" />
+
+  <!-- Ambient Glow Orbs -->
+  <rect width="1200" height="500" fill="url(#glow-peach)" />
+  <rect width="1200" height="500" fill="url(#glow-lav)" />
+  <rect width="1200" height="500" fill="url(#glow-primary)" />
+
+  <!-- Celestial Wireframes & Orbits -->
+  <g stroke="#ffffff" fill="none" opacity="0.18">
+    <circle cx="950" cy="250" r="180" stroke-dasharray="3 6" stroke-width="1"/>
+    <circle cx="950" cy="250" r="230" stroke-width="1"/>
+    <circle cx="950" cy="250" r="310" stroke-dasharray="1 5" stroke-width="1"/>
+    <line x1="940" y1="250" x2="960" y2="250" stroke="#ebffc0" stroke-width="1.2" opacity="0.6"/>
+    <line x1="950" y1="240" x2="950" y2="260" stroke="#ebffc0" stroke-width="1.2" opacity="0.6"/>
+    <line x1="115" y1="65" x2="125" y2="65" stroke-width="1"/>
+    <line x1="120" y1="60" x2="120" y2="70" stroke-width="1"/>
+    <line x1="600" y1="440" x2="610" y2="440" stroke-width="1"/>
+    <line x1="605" y1="435" x2="605" y2="445" stroke-width="1"/>
+  </g>
+
+  <!-- ==================== LEFT HERO CONTENT ==================== -->
+  <g transform="translate(68, 85)">
+    <!-- Eyebrow -->
+    <g transform="translate(0, 20)">
+      <circle cx="5" cy="-4" r="4.5" fill="#ebffc0" filter="url(#citrus-glow)"/>
+      <text x="20" y="0" class="f-sans tag-text" fill="#fafafa" opacity="0.75">MULTIVERSA GROUP · OPEN ECOSYSTEM</text>
+      <line x1="330" y1="-4" x2="365" y2="-4" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+      <text x="380" y="0" class="f-sans tag-text" fill="#fafafa" opacity="0.75">V0.2.0</text>
+    </g>
+
+    <!-- Title with Lightning Badge -->
+    <g transform="translate(0, 95)">
+      <!-- Lightning Badge -->
+      <rect x="0" y="-56" width="60" height="60" rx="20" fill="url(#glass-pill)" stroke="rgba(235, 255, 192, 0.45)" stroke-width="1"/>
+      <path d="M33 -44 L23 -29 H32 L31 -19 L41 -34 H32 Z" fill="#ebffc0" filter="url(#citrus-glow)"/>
+      
+      <!-- Heading -->
+      <text x="76" y="-8" class="f-serif" font-size="74" fill="#ffffff" letter-spacing="-0.025em">Velo <tspan font-style="italic" fill="url(#text-title-grad)">Framework</tspan></text>
+    </g>
+
+    <!-- Subtitle -->
+    <text x="0" y="140" class="f-sans" font-size="20.5" fill="#fafafa" opacity="0.88" letter-spacing="-0.01em">
+      The Zero-Cost Edge &amp; Headless Infrastructure Harness
+    </text>
+
+    <!-- Multi-Tone Brand Line -->
+    <rect x="0" y="165" width="280" height="2" rx="1" fill="url(#brand-line-grad)"/>
+
+    <!-- Pillars Row (Glass Pills) -->
+    <g transform="translate(0, 195)">
+      <!-- Pill 1: Astro / Next / Vite -->
+      <g>
+        <rect x="0" y="0" width="168" height="36" rx="18" fill="url(#glass-pill)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <circle cx="18" cy="18" r="3.5" fill="#00E5FF"/>
+        <text x="30" y="23" class="f-sans pill-text">Astro · Next.js · Vite</text>
+      </g>
+
+      <!-- Pill 2: SurrealDB / InsForge -->
+      <g transform="translate(178, 0)">
+        <rect x="0" y="0" width="170" height="36" rx="18" fill="url(#glass-pill)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <circle cx="18" cy="18" r="3.5" fill="#FF5470"/>
+        <text x="30" y="23" class="f-sans pill-text">SurrealDB · InsForge</text>
+      </g>
+
+      <!-- Pill 3: Telegram Cockpit -->
+      <g transform="translate(358, 0)">
+        <rect x="0" y="0" width="154" height="36" rx="18" fill="url(#glass-pill)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <circle cx="18" cy="18" r="3.5" fill="#2AABEE"/>
+        <text x="30" y="23" class="f-sans pill-text">Telegram Cockpit</text>
+      </g>
+
+      <!-- Pill 4: OpenPassport -->
+      <g transform="translate(0, 46)">
+        <rect x="0" y="0" width="162" height="36" rx="18" fill="url(#glass-pill)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <circle cx="18" cy="18" r="3.5" fill="#a78bfa"/>
+        <text x="30" y="23" class="f-sans pill-text">OpenPassport v1.0</text>
+      </g>
+    </g>
+
+    <!-- Guarantee Footer -->
+    <g transform="translate(0, 310)">
+      <text x="0" y="0" class="f-sans tag-text" fill="#ebffc0" font-weight="700">$0 <tspan fill="#ffffff" opacity="0.6" font-weight="500">INFRASTRUCTURE</tspan></text>
+      <text x="165" y="0" class="f-sans" fill="#ffffff" opacity="0.3">•</text>
+      <text x="185" y="0" class="f-sans tag-text" fill="#ebffc0" font-weight="700">AI-FIRST <tspan fill="#ffffff" opacity="0.6" font-weight="500">ARCHITECTURE</tspan></text>
+      <text x="365" y="0" class="f-sans" fill="#ffffff" opacity="0.3">•</text>
+      <text x="385" y="0" class="f-sans tag-text" fill="#ebffc0" font-weight="700">CONTRACT-FIRST <tspan fill="#ffffff" opacity="0.6" font-weight="500">INTEGRITY</tspan></text>
+    </g>
+  </g>
+
+  <!-- ==================== RIGHT STAGE: PASSPORT EMBLEM ==================== -->
+  <g transform="translate(800, 55)" filter="url(#soft-shadow)">
+    <!-- Frosted Passport Card Outer Glass -->
+    <rect x="0" y="0" width="290" height="390" rx="145" ry="145" fill="url(#glass-card)" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+    
+    <!-- Dreamcore Window Arch -->
+    <g transform="translate(12, 12)">
+      <clipPath id="window-clip">
+        <rect x="0" y="0" width="266" height="215" rx="133" ry="133"/>
+      </clipPath>
+      <g clip-path="url(#window-clip)">
+        <rect width="266" height="215" fill="url(#window-bg)"/>
+        
+        <!-- Ambient Clouds -->
+        <circle cx="80" cy="90" r="75" fill="#a78bfa" opacity="0.85"/>
+        <circle cx="210" cy="120" r="70" fill="#ffffff" opacity="0.95"/>
+        <circle cx="50" cy="180" r="65" fill="#fce38a" opacity="0.75"/>
+        
+        <!-- Citrus Glint Spark in Center -->
+        <circle cx="133" cy="100" r="28" fill="#ebffc0" opacity="0.5" filter="url(#citrus-glow)"/>
+        <polygon points="133,88 136,97 145,100 136,103 133,112 130,103 121,100 130,97" fill="#ebffc0" filter="url(#citrus-glow)"/>
+      </g>
+      <rect x="0" y="0" width="266" height="215" rx="133" ry="133" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+    </g>
+
+    <!-- Passport Card Bottom Meta -->
+    <g transform="translate(145, 260)" text-anchor="middle">
+      <text y="0" class="f-sans tag-text" font-size="10" fill="#ffffff" opacity="0.65">PASSPORT NO. 2026-VELO</text>
+      <text y="28" class="f-serif" font-size="30" fill="#ffffff">Velo OS</text>
+      <text y="46" class="f-sans" font-size="11" fill="#c4b5fd" letter-spacing="0.08em" text-transform="uppercase">MULTIVERSA GROUP LLC</text>
+
+      <!-- Lens Dots (Peach, Violet, Citrus) -->
+      <g transform="translate(-16, 60)">
+        <circle cx="0" cy="0" r="4" fill="#f7b299"/>
+        <circle cx="16" cy="0" r="4" fill="#a78bfa"/>
+        <circle cx="32" cy="0" r="4" fill="#ebffc0"/>
+      </g>
+    </g>
+
+    <!-- Circular Verified Stamp -->
+    <g transform="translate(210, 310)">
+      <circle cx="45" cy="45" r="38" fill="none" stroke="#ebffc0" stroke-width="1" opacity="0.45"/>
+      <circle cx="45" cy="45" r="33" fill="none" stroke="#ebffc0" stroke-width="1" stroke-dasharray="3 3" opacity="0.3"/>
+      <polygon points="45,38 47.5,43 53,44 49,48 50,53.5 45,50 40,53.5 41,48 37,44 42.5,43" fill="#ebffc0" opacity="0.85"/>
+      <text x="45" y="70" class="f-sans" font-size="6.5" fill="#ebffc0" font-weight="700" letter-spacing="1.5" text-anchor="middle" opacity="0.85">VERIFIED</text>
+    </g>
+  </g>
+</svg>

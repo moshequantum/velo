@@ -36,34 +36,63 @@ func (s *ReviewStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 }
 
 func (s *ReviewStep) View() string {
-	title := tui.StyleTitle.Render("5. Revisión del Blueprint Velo")
-	desc := tui.StyleSubtitle.Render("Verifica la configuración antes de generar el arnés:")
+	isEs := s.state.IsSpanish()
 
 	bot := s.state.TelegramBotHandle
 	if bot == "" {
-		bot = "(Sin configurar)"
+		if isEs {
+			bot = "(Sin bot)"
+		} else {
+			bot = "(No bot)"
+		}
 	}
-	insforge := s.state.InsForgeProjectID
-	if insforge == "" {
-		insforge = "(Configurar en .env)"
+
+	dataDesc := s.state.DataProvider
+	if s.state.DataURL != "" {
+		dataDesc += fmt.Sprintf(" (%s)", s.state.DataURL)
 	}
 
-	summary := fmt.Sprintf(`  • Proyecto:     %s (%s)
-  • Frontend:     %s
-  • Runtime:      %s
-  • Base de datos: PostgreSQL vía %s
-  • Cockpit:      Telegram HITL %s
-  • Infra Cost:   $0.00 / mes`,
-		tui.StyleSelected.Render(s.state.ProjectName),
-		s.state.ProjectSlug,
-		tui.StyleSelected.Render(s.state.Frontend),
-		tui.StyleSelected.Render(s.state.Runtime),
-		tui.StyleSelected.Render(insforge),
-		tui.StyleSelected.Render(bot),
-	)
+	var title, desc, helpText, summary string
 
-	help := tui.StyleSubtitle.Render("\n[ Enter ] Generar Proyecto   [ Esc ] Modificar   [ q ] Cancelar")
+	if isEs {
+		title = tui.StyleTitle.Render("5. Revisión del Blueprint Velo")
+		desc = tui.StyleSubtitle.Render("Verifica la arquitectura completa antes de generar el arnés:")
+		summary = fmt.Sprintf(`  • 1. Contratos:    %s (%s) · OpenPassport v1.0
+  • 2. Base Datos:   %s
+  • 3. Endpoints:    Telegram HITL %s (/api/telegram)
+  • 4. Frontend:     %s en %s
+  • Idioma:          %s
+  • Modo:            Free-tier first ($0)`,
+			tui.StyleSelected.Render(s.state.ProjectName),
+			s.state.ProjectSlug,
+			tui.StyleSelected.Render(dataDesc),
+			tui.StyleSelected.Render(bot),
+			tui.StyleSelected.Render(s.state.Frontend),
+			tui.StyleSelected.Render(s.state.Runtime),
+			tui.StyleSelected.Render("Español"),
+		)
+		helpText = "\n[ Enter ] Generar Proyecto   [ Esc ] Modificar   [ q ] Cancelar"
+	} else {
+		title = tui.StyleTitle.Render("5. Velo Blueprint Review")
+		desc = tui.StyleSubtitle.Render("Verify complete architecture before generating the harness:")
+		summary = fmt.Sprintf(`  • 1. Contracts:    %s (%s) · OpenPassport v1.0
+  • 2. Database:     %s
+  • 3. Endpoints:    Telegram HITL %s (/api/telegram)
+  • 4. Frontend:     %s on %s
+  • Language:        %s
+  • Mode:            Free-tier first ($0)`,
+			tui.StyleSelected.Render(s.state.ProjectName),
+			s.state.ProjectSlug,
+			tui.StyleSelected.Render(dataDesc),
+			tui.StyleSelected.Render(bot),
+			tui.StyleSelected.Render(s.state.Frontend),
+			tui.StyleSelected.Render(s.state.Runtime),
+			tui.StyleSelected.Render("English"),
+		)
+		helpText = "\n[ Enter ] Generate Project   [ Esc ] Modify   [ q ] Cancel"
+	}
 
+	help := tui.StyleSubtitle.Render(helpText)
 	content := fmt.Sprintf("%s\n%s\n\n%s\n\n%s", title, desc, summary, help)
 	return tui.StyleBox.Render(content)
 }

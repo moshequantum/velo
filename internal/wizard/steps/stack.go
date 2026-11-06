@@ -13,27 +13,45 @@ type StackStep struct {
 	cursor int
 }
 
-var stackChoices = []struct {
-	Key         string
-	Title       string
-	Description string
-}{
+type stackChoice struct {
+	Key     string
+	Title   string
+	Runtime string
+	DescEn  string
+	DescEs  string
+}
+
+var stackChoices = []stackChoice{
 	{
-		Key:         "astro",
-		Title:       "Astro + Cloudflare Pages (Recomendado)",
-		Description: "Velocidad extrema, SSR/Static híbrido, Islas React y API routes unificadas.",
+		Key:     "astro",
+		Title:   "Astro + Cloudflare Pages (Default)",
+		Runtime: "cloudflare-pages",
+		DescEn:  "Extreme speed, hybrid SSR/Static, React islands and unified API routes.",
+		DescEs:  "Velocidad extrema, SSR/Static híbrido, Islas React y API routes unificadas.",
 	},
 	{
-		Key:         "react-vite",
-		Title:       "React + Vite SPA",
-		Description: "SPA clásico en Cloudflare Pages sin SSR.",
+		Key:     "next",
+		Title:   "Next.js + Cloudflare Workers",
+		Runtime: "cloudflare-workers",
+		DescEn:  "Modern App Router adapted to the Edge with OpenNext.",
+		DescEs:  "App Router moderno adaptado al Edge con OpenNext.",
+	},
+	{
+		Key:     "react-vite",
+		Title:   "React + Vite SPA",
+		Runtime: "cloudflare-pages",
+		DescEn:  "Classic SPA on Cloudflare Pages with Edge functions.",
+		DescEs:  "SPA clásico en Cloudflare Pages con funciones Edge.",
 	},
 }
 
 func NewStackStep(state *wizard.State) *StackStep {
 	cursor := 0
-	if state.Frontend == "react-vite" {
-		cursor = 1
+	for i, c := range stackChoices {
+		if c.Key == state.Frontend {
+			cursor = i
+			break
+		}
 	}
 	return &StackStep{state: state, cursor: cursor}
 }
@@ -55,7 +73,9 @@ func (s *StackStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 				s.cursor++
 			}
 		case "enter", " ":
-			s.state.Frontend = stackChoices[s.cursor].Key
+			chosen := stackChoices[s.cursor]
+			s.state.Frontend = chosen.Key
+			s.state.Runtime = chosen.Runtime
 			return s, tui.Next()
 		case "esc":
 			return s, tui.Back()
@@ -67,25 +87,38 @@ func (s *StackStep) Update(msg tea.Msg) (tui.Step, tea.Cmd) {
 }
 
 func (s *StackStep) View() string {
-	title := tui.StyleTitle.Render("2. Arquitectura de Frontend & Edge")
-	desc := tui.StyleSubtitle.Render("Elige la base del sistema visual y sus rutas en Cloudflare:")
+	isEs := s.state.IsSpanish()
+
+	var title, desc, helpText string
+	if isEs {
+		title = tui.StyleTitle.Render("4. Frontend & Arquitectura de Entrega")
+		desc = tui.StyleSubtitle.Render("Empaqueta y entrega tu frontend en Cloudflare para consumir los contratos y la DB:")
+		helpText = "\n[ ↑/↓ ] Navegar   [ Enter ] Seleccionar   [ Esc ] Volver"
+	} else {
+		title = tui.StyleTitle.Render("4. Frontend & Delivery Architecture")
+		desc = tui.StyleSubtitle.Render("Bundle and deliver your frontend on Cloudflare to consume contracts and DB:")
+		helpText = "\n[ ↑/↓ ] Navigate   [ Enter ] Select   [ Esc ] Back"
+	}
 
 	var options string
 	for i, choice := range stackChoices {
 		prefix := "  "
-		cursorMarker := " "
+		cursorMarker := "○"
 		if s.cursor == i {
 			prefix = "> "
 			cursorMarker = "●"
-		} else {
-			cursorMarker = "○"
+		}
+
+		description := choice.DescEn
+		if isEs {
+			description = choice.DescEs
 		}
 
 		line := fmt.Sprintf("%s%s %s\n    %s\n",
 			prefix,
 			cursorMarker,
 			choice.Title,
-			tui.StyleSubtitle.Render(choice.Description),
+			tui.StyleSubtitle.Render(description),
 		)
 
 		if s.cursor == i {
@@ -95,8 +128,7 @@ func (s *StackStep) View() string {
 		}
 	}
 
-	help := tui.StyleSubtitle.Render("[ ↑/↓ ] Navegar   [ Enter ] Seleccionar   [ Esc ] Volver")
-
+	help := tui.StyleSubtitle.Render(helpText)
 	content := fmt.Sprintf("%s\n%s\n\n%s%s", title, desc, options, help)
 	return tui.StyleBox.Render(content)
 }
