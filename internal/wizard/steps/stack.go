@@ -43,6 +43,13 @@ var stackChoices = []stackChoice{
 		DescEn:  "Classic SPA on Cloudflare Pages with Edge functions.",
 		DescEs:  "SPA clásico en Cloudflare Pages con funciones Edge.",
 	},
+	{
+		Key:     "custom",
+		Title:   "Custom Headless / Keystatic BYOF",
+		Runtime: "cloudflare-pages",
+		DescEn:  "Bring your own frontend or headless Keystatic singletons with Cloudflare + SurrealDB contracts.",
+		DescEs:  "Trae tu propio frontend o singletons headless de Keystatic con contratos Cloudflare + SurrealDB.",
+	},
 }
 
 func NewStackStep(state *wizard.State) *StackStep {

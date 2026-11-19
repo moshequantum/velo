@@ -19,7 +19,7 @@ const Version = "0.2.0"
 
 var (
 	validLanguages = map[string]bool{"en": true, "es": true}
-	validFrontends = map[string]bool{"astro": true, "next": true, "react-vite": true}
+	validFrontends = map[string]bool{"astro": true, "next": true, "react-vite": true, "custom": true}
 	validRuntimes  = map[string]bool{"cloudflare-pages": true, "cloudflare-workers": true}
 	validData      = map[string]bool{"surrealdb": true, "insforge": true, "none": true}
 	validCockpits  = map[string]bool{"telegram": true, "none": true}
@@ -56,6 +56,10 @@ func main() {
 			os.Exit(2)
 		}
 		code := handleVerify(os.Args[2])
+		os.Exit(code)
+
+	case "update":
+		code := handleUpdate(os.Args[2:])
 		os.Exit(code)
 
 	case "help", "--help", "-h":
@@ -117,7 +121,7 @@ func handleInit(args []string) int {
 		return 2
 	}
 	if !validFrontends[*frontend] {
-		fmt.Fprintf(os.Stderr, "Error: valor inválido para --frontend: %q (válidos: astro, next, react-vite)\n", *frontend)
+		fmt.Fprintf(os.Stderr, "Error: valor inválido para --frontend: %q (válidos: astro, next, react-vite, custom)\n", *frontend)
 		return 2
 	}
 	if !validRuntimes[*runtime] {
@@ -272,6 +276,7 @@ Comandos:
   init                     Inicia el wizard interactivo o genera en modo headless
   doctor                   Verifica dependencias del entorno local (node, pnpm, wrangler, surreal)
   verify <ruta>            Verifica el sello criptográfico SHA-256 de un Pasaporte OpenPassport v1
+  update                   Verifica nuevas versiones y manifiestos criptográficos SHA256SUMS
   version                  Muestra la versión de Velo
   help                     Muestra esta ayuda
 
@@ -279,7 +284,7 @@ Flags para 'velo init':
   --lang <str>             Idioma / Language: en (default), es
   --name <str>             Nombre del proyecto (requerido en headless)
   --slug <str>             Slug identificador de la carpeta (auto-sanitizado)
-  --frontend <str>         Frontend: astro (default), next, react-vite
+  --frontend <str>         Frontend: astro (default), next, react-vite, custom
   --runtime <str>          Runtime: cloudflare-pages (default), cloudflare-workers
   --data <str>             Provider de datos: surrealdb (default), insforge, none
   --data-url <str>         URL pública del endpoint de datos
