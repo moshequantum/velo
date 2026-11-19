@@ -10,7 +10,7 @@ type State struct {
 	Language          string // "en" (default) | "es"
 	ProjectName       string
 	ProjectSlug       string
-	Frontend          string // "astro" | "next" | "react-vite"
+	Frontend          string // "astro" | "next" | "react-vite" | "custom"
 	Runtime           string // "cloudflare-pages" | "cloudflare-workers"
 	DataProvider      string // "surrealdb" (default) | "insforge" (legacy) | "none"
 	DataURL           string // URL pública del endpoint; NUNCA claves

@@ -1,0 +1,9 @@
+# {{.ProjectName}} — Velo Custom Headless Harness
+
+Este proyecto fue inicializado con `velo init --frontend custom` para prototipado 0 a 1 sin acoplamiento de UI.
+
+## Qué incluye este arnés
+
+- **Contrato unificado (`velo.config.ts`):** Configuración central de runtime (`{{.Runtime}}`), datos (`{{.DataProvider}}`) y cockpit (`{{.Cockpit}}`).
+- **Cloudflare Edge (`wrangler.toml` + `functions/api/telegram.ts`):** Webhook HITL fail-closed con comparación en tiempo constante (`crypto.subtle.timingSafeEqual`).
+- **CMS Headless sin paneles innecesarios:** Compatible con **Keystatic** (*singletons* y colecciones en Git/local sin levantar dashboards a medida) o con islas dinámicas en Astro/Vite/SvelteKit/Remix.

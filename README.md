@@ -5,7 +5,7 @@
 <br/><br/>
 
 [![Release](https://img.shields.io/github/v/release/moshequantum/velo?color=00E5FF&label=Release&style=flat-square)](https://github.com/moshequantum/velo/releases)
-[![Go Version](https://img.shields.io/badge/Go-%3E%3D%201.27.1-7C4DFF?style=flat-square&logo=go)](https://go.dev)
+[![Go Version](https://img.shields.io/badge/Go-%3E%3D%201.24-7C4DFF?style=flat-square&logo=go)](https://go.dev)
 [![Astro](https://img.shields.io/badge/Astro-5.0-FF5D01?style=flat-square&logo=astro)](https://astro.build)
 [![Next.js](https://img.shields.io/badge/Next.js-15.0-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![Cloudflare](https://img.shields.io/badge/Runtime-Cloudflare%20Pages%20%2F%20Workers-F38020?style=flat-square&logo=cloudflare)](https://cloudflare.com)

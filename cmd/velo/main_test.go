@@ -2,7 +2,13 @@ package main
 
 import (
 	"bytes"
+	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
 	"io"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
@@ -123,6 +129,11 @@ func TestHandleInit_FlagParsingTable(t *testing.T) {
 			args:         []string{"--name", "My App", "--frontend", "astro", "--data", "insforge", "--dry-run"},
 			expectedCode: 0,
 		},
+		{
+			name:         "valid custom headless frontend",
+			args:         []string{"--name", "Custom App", "--frontend", "custom", "--data", "surrealdb", "--dry-run"},
+			expectedCode: 0,
+		},
 	}
 
 	for _, tt := range tests {
@@ -168,5 +179,43 @@ func TestHandleInit_DryRunPrintsSlugPrefix(t *testing.T) {
 
 	if !hasPrefixLine {
 		t.Errorf("expected at least one line starting with %q in dry-run output:\n%s", expectedPrefix, stdoutStr)
+	}
+}
+
+func TestCheckUpdateAndVerifySHA256Sums(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{
+  "tag_name": "v0.2.1",
+  "assets": [
+    {
+      "name": "SHA256SUMS",
+      "browser_download_url": "https://example.com/SHA256SUMS"
+    }
+  ]
+}`))
+	}))
+	defer srv.Close()
+
+	rep, err := CheckUpdate(context.Background(), "0.2.0", srv.URL)
+	if err != nil {
+		t.Fatalf("CheckUpdate failed: %v", err)
+	}
+	if !rep.UpdateNeeded || rep.LatestVersion != "v0.2.1" || !rep.HasSHA256Sums {
+		t.Fatalf("unexpected UpdateReport: %+v", rep)
+	}
+
+	fakeBin := []byte("velo-test-binary-payload\n")
+	sum := sha256.Sum256(fakeBin)
+	wantHash := hex.EncodeToString(sum[:])
+	sums := fmt.Sprintf("%s  dist/velo-linux-amd64\n", wantHash)
+
+	gotHash, err := VerifyBinaryAgainstSHA256Sums(fakeBin, "velo-linux-amd64", sums)
+	if err != nil || gotHash != wantHash {
+		t.Fatalf("VerifyBinaryAgainstSHA256Sums failed: got=%s err=%v", gotHash, err)
+	}
+
+	if _, err := VerifyBinaryAgainstSHA256Sums([]byte("tampered"), "velo-linux-amd64", sums); err == nil {
+		t.Fatal("expected tampered binary to fail SHA256SUMS verification")
 	}
 }

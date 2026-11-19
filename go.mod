@@ -1,6 +1,6 @@
 module github.com/moshequantum/velo
 
-go 1.27.1
+go 1.24
 
 require (
 	github.com/charmbracelet/bubbles v0.20.0

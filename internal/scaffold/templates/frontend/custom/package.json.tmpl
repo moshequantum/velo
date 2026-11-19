@@ -1,0 +1,20 @@
+{
+  "name": "{{.ProjectSlug}}",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev ./public",
+    "build": "echo \"Custom frontend build ready\""{{if eq .DataProvider "surrealdb"}},
+    "db:local": "surreal start --user root --pass root memory",
+    "db:migrate": "surreal import --conn http://127.0.0.1:8000 --user root --pass root --ns test --db test db/schema.surql"{{end}}
+  },
+  "dependencies": {
+    {{if eq .DataProvider "surrealdb"}}"surrealdb": "2.2.2"{{end}}
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.0",
+    "typescript": "^5.6.0",
+    "wrangler": "^3.114.0"
+  }
+}
